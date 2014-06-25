@@ -55,6 +55,42 @@
   lgrey              = '[0;37m'
   white              = '[1;37m'
 -%>
+<%
+if @show_maturity
+  case maturity_color
+    when 'red';     mat_col=red
+    when 'lred';    mat_col=lred
+    when 'green';   mat_col=green
+    when 'lgreen';  mat_col=lgreen
+    when 'brown';   mat_col=brown
+    when 'yellow';  mat_col=yellow
+    when 'lblue';   mat_col=lblue
+    when 'blue';    mat_col=blue
+    when 'purple';  mat_col=purple
+    when 'lpurple'; mat_col=lpurple
+    when 'lcyan';   mat_col=lcyan
+    when 'cyan';    mat_col=cyan
+    when 'lgrey';   mat_col=lgrey
+    when 'white';   mat_col=white
+  end
+  case maturity_alt_color
+    when 'red';     alt_col=red
+    when 'lred';    alt_col=lred
+    when 'green';   alt_col=green
+    when 'lgreen';  alt_col=lgreen
+    when 'brown';   alt_col=brown
+    when 'yellow';  alt_col=yellow
+    when 'lblue';   alt_col=lblue
+    when 'blue';    alt_col=blue
+    when 'purple';  alt_col=purple
+    when 'lpurple'; alt_col=lpurple
+    when 'lcyan';   alt_col=lcyan
+    when 'cyan';    alt_col=cyan
+    when 'lgrey';   alt_col=lgrey
+    when 'white';   alt_col=white
+  end
+end
+-%>
 <% if show_warn -%>
 <%=red-%>/￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣
 <%=red-%>|<%=reset-%> This system is for the use of authorized users only. Individuals
@@ -77,14 +113,14 @@
 <%=yellow-%>/￣￣#<%=reset-%> Configuration Notice <%=yellow-%>#￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣<%=reset%>
 <%=yellow-%>| <%=reset-%>The configuration of <%=lblue-%><%= hostname -%><%=reset-%> is managed by Puppet.
 <% if show_region -%>
-<%=yellow-%>| <%=reset-%>Region:      <%=lblue-%><%= region -%><%=reset-%><% if !show_ec2  -%><% end %><%end -%>
+<%=yellow-%>| <%=reset-%>Region:        <%=lblue-%><%= region -%><%=reset-%><% if !show_ec2  -%><% end %><%end -%>
 <% if show_ec2 and ec2_az -%> Availability Zone: <%=lblue-%><%= location.is_a?(String) ? location :ec2_az%><%=reset-%><% end %>
-<% if show_maturity -%><%=yellow-%>| <%=reset-%>Code Maturity: <%=maturity_alt_color-%><%=maturity_color-%><%= maturity_hr -%><%=maturity_alt_color-%>><%=reset%>
+<% if show_maturity -%><%=yellow-%>| <%=reset-%>Code Maturity: <%=alt_col-%>[ <%=mat_col-%><%= maturity_hr -%><%=alt_col-%> ]<%=reset%>
 <% if show_product -%>
-<%=yellow-%>| <%=reset-%>Product:     <%=lblue-%><%= product_hr -%><%=reset%>
+<%=yellow-%>| <%=reset-%>Product:       <%=lblue-%><%= product_hr -%><%=reset%>
 <%end -%>
 <%end -%><% if show_func -%>
-<%=yellow-%>| <%=reset-%>Function:    <%=lblue-%><%= func_hr -%><%=reset%>
+<%=yellow-%>| <%=reset-%>Function:      <%=lblue-%><%= func_hr -%><%=reset%>
 <%end -%>
 <%if show_ec2 and ec2_instance_id -%>
 <%=yellow-%>/￣￣￣￣￣￣#<%=reset-%> EC2 Instance Information <%=yellow-%>#￣￣￣￣￣￣￣￣￣￣￣￣￣￣<%=reset%>
