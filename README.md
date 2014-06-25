@@ -68,26 +68,26 @@ Classes, types, and resources for customizing, configuring, and doing the fancy 
 The **motd** class does ...
 
 ###Hiera Example
-    motd::backup:         false
-    motd::show_ec2:       true
-    motd::show_env:       true
-    motd::show_func:      true
-    motd::show_ip:        true
-    motd::show_product:   true
-    motd::show_region:    true
-    motd::show_warn:      true
-    motd::func_hr:        'Human Readable Function'
+    motd::backup:              false
+    motd::show_ec2:            true
+    motd::show_maturity:       true
+    motd::show_func:           true
+    motd::show_ip:             true
+    motd::show_product:        true
+    motd::show_region:         true
+    motd::show_warn:           true
+    motd::func_hr:             'Human Readable Function'
     motd::head:
      - 'this would be the first line'
      - 'this would be the next line'
-    motd::location:       'Some Location'
-    motd::product_hr      'Human Readable Productname'
-    motd::region:         'aus'
-    motd::tail:           false
-    motd::tier:           'prd'
-    motd::tier_alt_color: 'lred'
-    motd::tier_color:     'red'
-    motd::tier_hr:        'Production'
+    motd::location:           'Some Location'
+    motd::product_hr          'Human Readable Productname'
+    motd::region:             'aus'
+    motd::tail:               false
+    motd::maturity:           'prd'
+    motd::maturity_alt_color: 'lred'
+    motd::maturity_color:     'red'
+    motd::maturity_hr:        'Production'
 
 ###Parameters
 * **motd** Class
@@ -112,7 +112,7 @@ The **motd** class does ...
   * **show_ec2** *bool*
 
  Whether or not to display Amazon ec2 fact information in the motd
-  * **show env** *bool*
+  * **show_maturity** *bool*
 
  Whether or not to display the environment name in the motd
   * **show_func** *bool*
@@ -133,18 +133,18 @@ The **motd** class does ...
   * **tail** *array*
 
  This is an array, (one line per array element) which is displayed after the motd banner. Useful for conveying notes about the particular server, or service enablement instructions.
-  * **tier** *string*
+  * **maturity** *string*
 
- This is a short name for the code maturity,service, or environment tier the server is a part of.
-  * **tier_alt_color** *string* (Valid options:  *blue* *green* *lblue* *lgreen* *lpurple* *lred* *purple* *red* *white* *yellow*)
+ This is a short name for the code maturity,service, or environment maturity the server is a part of.
+  * **maturity_alt_color** *string* (Valid options:  *blue* *green* *lblue* *lgreen* *lpurple* *lred* *purple* *red* *white* *yellow*)
 
- The embelishment color to display around the tier
-  * **tier_alt_color** *string* (Valid options:  *blue* *green* *lblue* *lgreen* *lpurple* *lred* *purple* *red* *white* *yellow*)
+ The embelishment color to display around the maturity
+  * **maturity_alt_color** *string* (Valid options:  *blue* *green* *lblue* *lgreen* *lpurple* *lred* *purple* *red* *white* *yellow*)
 
- The color to display the tier in.
-  * **tier_hr** *string*
+ The color to display the maturity in.
+  * **maturity_hr** *string*
 
- This is a pretty name for the code maturity,service, or environment tier the server is a part of.
+ This is a pretty name for the code maturity,service, or environment maturity the server is a part of.
 
 ##Reference
 
