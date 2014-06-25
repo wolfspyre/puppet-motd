@@ -79,7 +79,7 @@
 <% if show_region -%>
 <%=yellow-%>| <%=reset-%>Region:      <%=lblue-%><%= region -%><%=reset-%><% if !show_ec2  -%><% end %><%end -%>
 <% if show_ec2 and ec2_az -%> Availability Zone: <%=lblue-%><%= location.i_a?(String) ? location :ec2_az%><%=reset-%><% end %>
-<% if show_env -%><%=yellow-%>| <%=reset-%>Environment: <%=tier_alt_color-%>< <%=tier_color-%><%= tier_hr -%> <%=tier_alt_color-%>><%=reset%>
+<% if show_env -%><%=yellow-%>| <%=reset-%>Environment: <%=tier_alt_color-%><%=tier_color-%><%= tier_hr -%><%=tier_alt_color-%>><%=reset%>
 <% if show_product -%>
 <%=yellow-%>| <%=reset-%>Product:     <%=lblue-%><%= product_hr -%><%=reset%>
 <%end -%>
