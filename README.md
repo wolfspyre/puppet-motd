@@ -68,6 +68,7 @@ Classes, types, and resources for customizing, configuring, and doing the fancy 
 The **motd** class does ...
 
 ###Hiera Example
+    motd::backup:         false
     motd::show_ec2:       true
     motd::show_env:       true
     motd::show_func:      true
@@ -90,6 +91,9 @@ The **motd** class does ...
 
 ###Parameters
 * **motd** Class
+  * **backup** *bool*
+
+  This determines if we should back up the generated motd files with the puppet fileserver.
   * **func_hr** *string*
 
  This is the human readable name of the function this server performs

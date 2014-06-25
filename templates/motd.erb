@@ -22,17 +22,17 @@
   product_hr         = @product_hr
   region             = @region
   show_ec2           = @show_ec2
-  show_env           = @show_env
+  show_maturity      = @show_maturity
   show_func          = @show_func
   show_ip            = @show_ip
   show_product       = @show_product
   show_region        = @show_region
   show_warn          = @show_warn
   tail               = @tail
-  tier               = @tier
-  tier_alt_color     = @tier_alt_color
-  tier_color         = @tier_color
-  tier_hr            = @tier_hr
+  maturity           = @maturity
+  maturity_alt_color = @maturity_alt_color
+  maturity_color     = @maturity_color
+  maturity_hr        = @maturity_hr
 -%>
 <%
   reset              = '[0m'
@@ -78,8 +78,8 @@
 <%=yellow-%>| <%=reset-%>The configuration of <%=lblue-%><%= hostname -%><%=reset-%> is managed by Puppet.
 <% if show_region -%>
 <%=yellow-%>| <%=reset-%>Region:      <%=lblue-%><%= region -%><%=reset-%><% if !show_ec2  -%><% end %><%end -%>
-<% if show_ec2 and ec2_az -%> Availability Zone: <%=lblue-%><%= location.i_a?(String) ? location :ec2_az%><%=reset-%><% end %>
-<% if show_env -%><%=yellow-%>| <%=reset-%>Environment: <%=tier_alt_color-%><%=tier_color-%><%= tier_hr -%><%=tier_alt_color-%>><%=reset%>
+<% if show_ec2 and ec2_az -%> Availability Zone: <%=lblue-%><%= location.is_a?(String) ? location :ec2_az%><%=reset-%><% end %>
+<% if show_maturity -%><%=yellow-%>| <%=reset-%>Code Maturity: <%=maturity_alt_color-%><%=maturity_color-%><%= maturity_hr -%><%=maturity_alt_color-%>><%=reset%>
 <% if show_product -%>
 <%=yellow-%>| <%=reset-%>Product:     <%=lblue-%><%= product_hr -%><%=reset%>
 <%end -%>

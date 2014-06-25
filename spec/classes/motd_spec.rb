@@ -1,7 +1,7 @@
 #!/usr/bin/env rspec
 require 'spec_helper'
 require 'puppetlabs_spec_helper/module_spec_helper'
-foo      = Puppet.settings[:modulepath]
+foo      = Puppet.settings[:basemodulepath]
 
 describe 'motd',:type => :class do
   context 'on a Debian OS' do
@@ -9,14 +9,25 @@ describe 'motd',:type => :class do
       'memorytotal'                  => '2000 MB',
       'operatingsystem'              => 'Debian',
       'operatingsystemrelease'       => '11',
-      'ipaddress'                    => '11.22.33.44',
-      'network_public_ip'
+      'ipaddress'                    => '10.11.22.33',
+      'network_public_ip'            => '22.33.44.55',
       'kernelrelease'                => '42.awesome-kernel',
       'fqdn'                         => 'hostname.domainname.com',
       'hostname'                     => 'hostname',
     }end
     let(:default_params) do
-      {'modulepath'  => foo }
+      {
+      'func_hr'            => 'TestBed',
+      'location'           => 'Austin',
+      'maturity'           => 'gnz',
+      'maturity_alt_color' => 'blue',
+      'maturity_color'     => 'lblue',
+      'maturity_hr'        => 'Gonzo',
+      'modulepath'         => foo,
+      'product_hr'         => 'RetailMeNot',
+      'region'             => 'Vagrant',
+
+       }
     end
     let :params do
        default_params
@@ -27,7 +38,7 @@ describe 'motd',:type => :class do
     it { should contain_class('motd') }
     it { should contain_file('/etc/motd') }
     it { should contain_file('/var/run/motd').with_content(/This file does not impact motd/) }
-    ['show_ec2','show_env','show_func','show_product','show_region','show_warn'].each do |booltest|
+    ['backup', 'show_ec2','show_maturity','show_func','show_product','show_region','show_warn'].each do |booltest|
       it "should report an error when #{booltest} is not a boolean" do
         params.merge!({ booltest => 'BOGON'})
         expect { subject }.to raise_error(Puppet::Error, /"BOGON" is not a boolean.  It looks to be a String/)
@@ -41,12 +52,12 @@ describe 'motd',:type => :class do
         end
       end
     end
-    describe 'when show_env is true' do
+    describe 'when show_maturity is true' do
       let :params do
-        default_params.merge({'show_env' => true})
+        default_params.merge({'show_maturity' => true})
       end
-      it 'should contain the environment' do
-        should contain_file('/etc/motd').with_content(/Local/)
+      it 'should contain the code maturity value' do
+        should contain_file('/etc/motd').with_content(/Gonzo/)
       end
     end
     describe 'when show_ec2 is true' do
@@ -59,7 +70,7 @@ describe 'motd',:type => :class do
           'ec2_hostname' => 'ip-11-22-33-44.us-west-1.compute.internal',
           'ec2_instance_id' => 'i-abcdefg`',
           'ec2_instance_type' => 'm1.small',
-          'ec2_local_ipv4' => '11.22.33.44',
+          'ec2_local_ipv4' => '10.11.22.33',
           'ec2_placement_availability_zone' => 'us-west-1a',
           'ec2_public_ipv4' => '22.33.44.55',
           'ec2_security_groups' => 'my-awesome-security-group-of-security'
@@ -72,6 +83,24 @@ describe 'motd',:type => :class do
       it { should contain_file('/etc/motd').with_content(/Instance Type:/) }
       it { should contain_file('/etc/motd').with_content(/Availability Zone:/) }
       it { should contain_file('/etc/motd').with_content(/Security Group:/) }
+    end
+    describe 'when backup is true' do
+      let :params do
+        default_params.merge({'backup' => true})
+      end
+      let :facts do
+        default_facts
+      end
+      it { should contain_file('/etc/motd').with({'backup' => true}) }
+    end
+    describe 'when backup is false' do
+      let :params do
+        default_params.merge({'backup' => false})
+      end
+      let :facts do
+        default_facts
+      end
+      it { should contain_file('/etc/motd').with({'backup' => false}) }
     end
     describe 'when show_func is true' do
       let :params do
@@ -97,12 +126,12 @@ describe 'motd',:type => :class do
         end
         let :facts do
           default_facts.merge({
-            'ec2_public_ipv4' => '54.215.11.68',
-            'ec2_local_ipv4' => '10.168.7.156'
+            'ec2_public_ipv4' => '22.33.44.55',
+            'ec2_local_ipv4' => '10.11.22.33'
           })
         end
         it 'should display the ec2 ip information' do
-          should contain_file('/etc/motd').with_content(/54.215.11.68/).with_content(/10.168.7.156/)
+          should contain_file('/etc/motd').with_content(/22.33.44.55/).with_content(/10.11.22.33/)
         end
       end
       context 'without the ec2 facts present' do
@@ -113,7 +142,7 @@ describe 'motd',:type => :class do
           default_facts
         end
         it 'should display the native IP facts' do
-          should contain_file('/etc/motd').with_content(/10.168.7.156/)
+          should contain_file('/etc/motd').with_content(/10.11.22.33/)
         end
       end
     end
@@ -130,21 +159,16 @@ describe 'motd',:type => :class do
         default_params.merge({'show_region' => true})
       end
       it 'should contain the region' do
-        should contain_file('/etc/motd').with_content(/unknownRegion/)
+        should contain_file('/etc/motd').with_content(/Vagrant/)
       end
     end
   end
   context 'on a RHEL OS' do
     let (:default_facts) do {
-      'rmninc_env_humanreadable'     => 'Local',
-      'rmninc_product_humanreadable' => 'RetailMeNot',
-      'rmninc_func_humanreadable'    => 'Puppetmaster',
-      'rmninc_loc_humanreadable'     => 'Unknown',
-      'rmninc_region'                => 'unknownRegion',
       'memorytotal'                  => '2000 MB',
       'operatingsystem'              => 'CentOS',
       'operatingsystemrelease'       => '6.4',
-      'ipaddress'                    => '10.168.7.156',
+      'ipaddress'                    => '10.11.22.33',
       'kernelrelease'                => '2.6.32-5-amd64',
       'fqdn'                         => 'vag-loc-osx-eop-pup-pet-001.rmninc.local',
     }end
@@ -160,7 +184,7 @@ describe 'motd',:type => :class do
     it { should contain_class('motd') }
     it { should contain_file('/etc/motd') }
     it { should contain_file('/var/run/motd').with_content(/This file does not impact motd/) }
-    ['show_ec2','show_env','show_func','show_product','show_region'].each do |booltest|
+    ['show_ec2','show_maturity','show_func','show_product','show_region'].each do |booltest|
       it "should report an error when #{booltest} is not a boolean" do
         params.merge!({ booltest => 'BOGON'})
         expect { subject }.to raise_error(Puppet::Error, /"BOGON" is not a boolean.  It looks to be a String/)
@@ -174,12 +198,12 @@ describe 'motd',:type => :class do
         end
       end
     end
-    describe 'when show_env is true' do
+    describe 'when show_maturity is true' do
       let :params do
-        default_params.merge({'show_env' => true})
+        default_params.merge({'show_maturity' => true,'maturity_hr' => 'Gonzo'})
       end
-      it 'should contain the environment' do
-        should contain_file('/etc/motd').with_content(/Local/)
+      it 'should contain the code maturity value' do
+        should contain_file('/etc/motd').with_content(/Gonzo/)
       end
     end
     describe 'when show_ec2 is true' do
@@ -192,9 +216,9 @@ describe 'motd',:type => :class do
           'ec2_hostname' => 'ip-10-168-7-156.us-west-1.compute.internal',
           'ec2_instance_id' => 'i-203d587b',
           'ec2_instance_type' => 'm1.small',
-          'ec2_local_ipv4' => '10.168.7.156',
+          'ec2_local_ipv4' => '10.11.22.33',
           'ec2_placement_availability_zone' => 'us-west-1a',
-          'ec2_public_ipv4' => '54.215.11.68',
+          'ec2_public_ipv4' => '22.33.44.55',
           'ec2_security_groups' => 'ec2-int-sw1-eop-pup-pet'
         })
       end
@@ -222,12 +246,12 @@ describe 'motd',:type => :class do
         end
         let :facts do
           default_facts.merge({
-            'ec2_public_ipv4' => '54.215.11.68',
-            'ec2_local_ipv4' => '10.168.7.156'
+            'ec2_public_ipv4' => '22.33.44.55',
+            'ec2_local_ipv4' => '10.11.22.33'
           })
         end
         it 'should display the ec2 ip information' do
-          should contain_file('/etc/motd').with_content(/54.215.11.68/).with_content(/10.168.7.156/)
+          should contain_file('/etc/motd').with_content(/22.33.44.55/).with_content(/10.11.22.33/)
         end
       end
       context 'without the ec2 facts present' do
@@ -238,24 +262,24 @@ describe 'motd',:type => :class do
           default_facts
         end
         it 'should display the native IP facts' do
-          should contain_file('/etc/motd').with_content(/10.168.7.156/)
+          should contain_file('/etc/motd').with_content(/10.11.22.33/)
         end
       end
     end
     describe 'when show_product is true' do
       let :params do
-        default_params.merge({'show_product' => true})
+        default_params.merge({'show_product' => true,'product_hr' => 'RetailMeNot'})
       end
-      it 'should contain the warning header' do
+      it 'should contain the product' do
         should contain_file('/etc/motd').with_content(/RetailMeNot/)
       end
     end
     describe 'when show_region is true' do
       let :params do
-        default_params.merge({'show_region' => true})
+        default_params.merge({'show_region' => true,'region' => 'Vagrant'})
       end
       it 'should contain the region' do
-        should contain_file('/etc/motd').with_content(/unknownRegion/)
+        should contain_file('/etc/motd').with_content(/Vagrant/)
       end
     end
     describe 'when show_warn is true' do
