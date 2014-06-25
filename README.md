@@ -16,7 +16,7 @@
 ##Overview
 
 This module manages your system's motd.
-
+![screenshot](screenshot/screenshot.jpg)
 ##Module Description
 
 This module will manage your system's motd, and will show some relevant information for your system from the last time puppet ran.
