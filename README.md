@@ -1,4 +1,5 @@
 #motd
+[![Build Status](https://travis-ci.org/wolfspyre/puppet-motd.svg?branch=master)](https://travis-ci.org/wolfspyre/puppet-motd)
 
 ####Table of Contents
 
